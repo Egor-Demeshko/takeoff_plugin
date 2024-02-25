@@ -14,10 +14,13 @@ ob_start();
         <input type="file" name="file" id="file" class="wp-upload-php" />
 
 
-        <?php submit_button(other_attributes: [
+        <?php submit_button(text: 'LOAD CODES', other_attributes: [
             'id' => 'takeoff_submit',
         ]); ?>
-        <p id="takeoff_message" style="display: none">Processing, wait please...</p>
+        <p id="takeoff_message" style="display: none">Processing, please wait... <br>
+            For 10.000 codes it may take up to 7 minutes. <br>
+            This status will be updated in real time. Also you can close this window, if you want.
+        </p>
 
     </form>
 </div>

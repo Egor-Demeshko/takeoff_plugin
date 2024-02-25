@@ -1,6 +1,8 @@
 <?php
 
 
+require_once plugin_dir_path(__FILE__) . 'ProcessPost.php';
+
 class ProcessFile
 {
     static public $request;
@@ -9,9 +11,11 @@ class ProcessFile
         // check for availiability of uploads folder
 
         static::$request = $request;
-        static::processFile();
+        $status = static::processFile();
 
-        //static::clearFolder(PATH . '/uploads');
+        if ($status) {
+            wp_send_json_success($status, 200);
+        };
     }
 
     static function checkFolder()
@@ -21,28 +25,16 @@ class ProcessFile
         }
     }
 
-    private function clearFolder($folderPath)
-    {
-        $files = glob($folderPath . '/*');
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                unlink($file);
-            } else {
-                $this->clearFolder($file);
-                rmdir($file);
-            }
-        }
-    }
 
     private static function processFile()
     {
         $file = file_get_contents('php://input');
         $csvArray = str_getcsv($file);
 
+        //clean last and first elements
+        $csvArray[0] = substr($csvArray[0], -8);
+        $csvArray[count($csvArray) - 1] = substr($csvArray[count($csvArray) - 1], 0, 8);
 
-        //$file_name = $body['file']['name'];
-        //$file_path = $body['file']['tmp_name'];
-
-        //move_uploaded_file($file_path, PATH . '/uploads/' . $file_name);
+        return (new ProcessPost('codes', $csvArray))->createPosts();
     }
 }

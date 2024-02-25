@@ -53,6 +53,7 @@ class TakeoffLoader {
                 "Content-Type": "multipart/form-data",
             },
         }).then((result) => {
+            debugger;
             if (result.ok) return { result: true };
             if (result.status === 401)
                 return { result: false, message: result.statusText };
